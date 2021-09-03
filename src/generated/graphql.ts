@@ -50618,33 +50618,52 @@ export type Subscription_RootPokemon_V2_Versionname_By_PkArgs = {
     id: Scalars['Int']
 }
 
-export type PokemonQueryVariables = Exact<{ [key: string]: never }>
+export type PokemonListQueryVariables = Exact<{
+    limit?: Maybe<Scalars['Int']>
+    offset?: Maybe<Scalars['Int']>
+}>
 
-export type PokemonQuery = {
+export type PokemonListQuery = {
     __typename?: 'query_root'
     pokemon_v2_pokemon: Array<{
         __typename?: 'pokemon_v2_pokemon'
+        weight?: Maybe<number>
+        height?: Maybe<number>
         name: string
         id: number
+        pokemon_v2_pokemonabilities: Array<{
+            __typename?: 'pokemon_v2_pokemonability'
+            pokemon_v2_ability?: Maybe<{
+                __typename?: 'pokemon_v2_ability'
+                name: string
+            }>
+        }>
     }>
 }
 
-export const PokemonDocument = `
-    query Pokemon {
-  pokemon_v2_pokemon {
+export const PokemonListDocument = `
+    query PokemonList($limit: Int, $offset: Int) {
+  pokemon_v2_pokemon(limit: $limit, offset: $offset) {
+    weight
+    height
     name
     id
+    pokemon_v2_pokemonabilities {
+      pokemon_v2_ability {
+        name
+      }
+    }
   }
 }
     `
-export const usePokemonQuery = <TData = PokemonQuery, TError = unknown>(
-    variables?: PokemonQueryVariables,
-    options?: UseQueryOptions<PokemonQuery, TError, TData>,
+export const usePokemonListQuery = <TData = PokemonListQuery, TError = unknown>(
+    variables?: PokemonListQueryVariables,
+    options?: UseQueryOptions<PokemonListQuery, TError, TData>,
 ) =>
-    useQuery<PokemonQuery, TError, TData>(
-        ['Pokemon', variables],
-        fetcher<PokemonQuery, PokemonQueryVariables>(
-            PokemonDocument,
+    useQuery<PokemonListQuery, TError, TData>(
+        ['PokemonList', variables],
+        fetcher<PokemonListQuery, PokemonListQueryVariables>(
+            PokemonListDocument,
             variables,
         ),
         options,
