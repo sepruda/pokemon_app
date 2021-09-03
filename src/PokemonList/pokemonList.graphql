@@ -1,0 +1,13 @@
+query PokemonList($limit: Int, $offset: Int) {
+  pokemon_v2_pokemon(limit: $limit, offset: $offset)  {
+    weight
+    height
+    name
+    id
+    pokemon_v2_pokemonabilities {
+      pokemon_v2_ability {
+        name
+      }
+    }
+  }
+}

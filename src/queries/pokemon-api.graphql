@@ -1,6 +1,0 @@
-query Pokemon {
-        pokemon_v2_pokemon {
-            name
-            id
-        }
-    }
