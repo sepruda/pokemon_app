@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import { Pokemon_V2_Pokemon } from '../generated/graphql'
+import { PokemonListQuery, Pokemon_V2_Pokemon } from '../generated/graphql'
 
 const Card = styled.div`
     background-color: white;
@@ -33,7 +33,7 @@ const CardInfo = styled.div`
 `
 
 type Props = {
-    pokemon: Pokemon_V2_Pokemon
+    pokemon: PokemonListQuery['pokemon_v2_pokemon'][0]
 }
 
 function PokemonCard({ pokemon }: Props) {

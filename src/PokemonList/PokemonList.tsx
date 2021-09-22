@@ -10,7 +10,7 @@ const Wrapper = styled.div`
 `
 
 function PokemonList() {
-    const { data } = usePokemonListQuery({ limit: 25, offset: 0 })
+    const { data } = usePokemonListQuery({ limit: 10, offset: 0 })
     console.log(`data`, data)
     return (
         <Wrapper>
