@@ -1,3 +1,4 @@
+watch: true
 overwrite: true
 schema: "https://beta.pokeapi.co/graphql/v1beta"
 documents: "src/**/*.graphql"
@@ -10,6 +11,9 @@ generates:
     config:
       fetcher:
         endpoint: "https://beta.pokeapi.co/graphql/v1beta"
+  src/generated/schema-api.graphql:
+    plugins:
+      - 'schema-ast'
   ./graphql.schema.json:
     plugins:
       - "introspection"
