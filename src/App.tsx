@@ -1,6 +1,6 @@
 import { QueryClient, QueryClientProvider } from 'react-query'
 import { Global, css } from '@emotion/react'
-import PokemonList from './PokemonList'
+import PokemonList from './PokemonList/PokemonList'
 
 const queryClient = new QueryClient()
 
