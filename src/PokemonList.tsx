@@ -17,7 +17,6 @@ const Card = styled.div`
 `
 
 const CardTitle = styled.h3`
-    text-align: center;
     text-transform: capitalize;
 `
 
