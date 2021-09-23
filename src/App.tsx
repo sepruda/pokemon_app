@@ -13,6 +13,7 @@ function App() {
                         background-color: hsl(220deg 100% 80%);
                         padding: 2rem;
                         font-family: 'Poppins', sans-serif;
+                        scroll-behavior: smooth;
                     }
                 `}
             />

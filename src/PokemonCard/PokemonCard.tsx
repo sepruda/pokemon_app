@@ -1,12 +1,18 @@
 import styled from '@emotion/styled'
-import { PokemonListQuery, Pokemon_V2_Pokemon } from '../generated/graphql'
+import { PokemonListQuery } from '../generated/graphql'
 
 const Card = styled.div`
     background-color: white;
     border-radius: 5px;
     display: flex;
-    filter: drop-shadow(2px 4px 8px hsl(220deg 60% 50%));
+    filter: drop-shadow(8px 16px 16px hsl(220deg 60% 50%));
     flex-direction: column;
+    transition: transform 200ms;
+    will-change: transform;
+
+    &:hover {
+        transform: translateY(-10px);
+    }
 `
 
 const CardTitle = styled.h3`
