@@ -1,0 +1,28 @@
+query PokemonDetails($id: Int) {
+pokemon_v2_pokemon(where: {id: {_eq: $id}}) {
+    name
+    id
+    base_experience
+    height
+    weight
+    pokemon_v2_pokemonabilities {
+      pokemon_v2_ability {
+        name
+        pokemon_v2_abilityflavortexts(where: {language_id: {_eq: 9}}) {
+          flavor_text
+        }
+      }
+    }
+    pokemon_v2_pokemonstats {
+      pokemon_v2_stat {
+        name
+        pokemon_v2_characteristics {
+          pokemon_v2_characteristicdescriptions(where: {language_id: {_eq: 9}}) {
+            description
+          }
+        }
+      }
+      base_stat
+    }
+  }
+}
