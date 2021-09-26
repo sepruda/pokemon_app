@@ -19,3 +19,11 @@ export const Spinner = styled(CircularProgress)`
 export const FlavorText = styled.span`
     color: rgb(104, 104, 104);
 `
+
+export const CardFooter = styled.div`
+    background-color: rgb(245, 245, 245);
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+`

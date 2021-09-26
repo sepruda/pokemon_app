@@ -52,7 +52,7 @@ function PokemonCard({ pokemon }: Props) {
                 onClose={handleClose}
                 aria-labelledby="modal-title"
             >
-                <PokemonDetails id={id} />
+                <PokemonDetails id={id} onClose={handleClose} />
             </Modal>
         </>
     )

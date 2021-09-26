@@ -1,3 +1,4 @@
+import { Button } from '@mui/material'
 import { usePokemonDetailsQuery } from '../generated/graphql'
 import {
     CardImage,
@@ -5,13 +6,14 @@ import {
     CardInfo,
     CardTitle,
 } from '../PokemonCard/styles'
-import { FlavorText, ModalWrapper, Spinner } from './styles'
+import { CardFooter, FlavorText, ModalWrapper, Spinner } from './styles'
 
 type Props = {
     id: number
+    onClose: () => void
 }
 
-function PokemonDetails({ id }: Props) {
+function PokemonDetails({ id, onClose }: Props) {
     const { data, isLoading } = usePokemonDetailsQuery({
         id,
     })
@@ -30,11 +32,10 @@ function PokemonDetails({ id }: Props) {
                         />
                     </CardImageWrapper>
                     <CardInfo>
-                        <CardTitle>{`${p?.name}`}</CardTitle>
-                        {`#${id}`}
-                        <p>{`Weight - ${p?.weight}`}</p>
-                        <p>{`Height - ${p?.height}`}</p>
-                        <p>{`Base experience - ${p?.base_experience}`}</p>
+                        <CardTitle>{`${p?.name} #${id}`}</CardTitle>
+                        <div>{`Weight - ${p?.weight}`}</div>
+                        <div>{`Height - ${p?.height}`}</div>
+                        <div>{`Base experience - ${p?.base_experience}`}</div>
                         <h4>Abilities</h4>
                         <ul>
                             {p?.pokemon_v2_pokemonabilities?.map((el) => {
@@ -62,6 +63,9 @@ function PokemonDetails({ id }: Props) {
                             })}
                         </ul>
                     </CardInfo>
+                    <CardFooter>
+                        <Button onClick={onClose}>Go back</Button>
+                    </CardFooter>
                 </>
             )}
         </ModalWrapper>
