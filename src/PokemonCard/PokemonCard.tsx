@@ -1,65 +1,60 @@
-import styled from '@emotion/styled'
+import { Modal } from '@mui/material'
+import { useState } from 'react'
 import { PokemonListQuery } from '../generated/graphql'
-
-const Card = styled.div`
-    background-color: white;
-    border-radius: 5px;
-    display: flex;
-    filter: drop-shadow(8px 16px 16px hsl(220deg 60% 50%));
-    flex-direction: column;
-    transition: transform 200ms;
-    will-change: transform;
-
-    &:hover {
-        transform: translateY(-10px);
-    }
-`
-
-const CardTitle = styled.h3`
-    text-transform: capitalize;
-    &:p {
-        color: lightgrey;
-    }
-`
-
-const CardImageWrapper = styled.div`
-    align-self: center;
-    background-color: hsl(156deg, 76%, 84%);
-    border-top-left-radius: 5px;
-    border-top-right-radius: 5px;
-    width: 100%;
-`
-
-const CardImage = styled.img`
-    margin: auto;
-    display: block;
-`
-const CardInfo = styled.div`
-    padding: 0.5rem;
-`
+import PokemonDetails from '../PokemonDetails/PokemonDetails'
+import {
+    Card,
+    CardImage,
+    CardImageWrapper,
+    CardInfo,
+    CardTitle,
+} from './styles'
 
 type Props = {
     pokemon: PokemonListQuery['pokemon_v2_pokemon'][0]
 }
 
 function PokemonCard({ pokemon }: Props) {
-    const { id, name, weight, height } = pokemon
+    const {
+        id,
+        name,
+        weight,
+        height,
+        pokemon_v2_pokemonabilities: abilities,
+    } = pokemon
+    const [open, setOpen] = useState(false)
+    const handleOpen = () => setOpen(true)
+    const handleClose = () => setOpen(false)
 
     return (
-        <Card key={id}>
-            <CardImageWrapper>
-                <CardImage
-                    src={`${process.env.PUBLIC_URL}/pokemons/${id}.png`}
-                    alt={name}
-                />
-            </CardImageWrapper>
-            <CardInfo>
-                <CardTitle>{`${name}`}</CardTitle>
-                {`#${id}`}
-                <p>{`Weight - ${weight}`}</p>
-                <p>{`Height - ${height}`}</p>
-            </CardInfo>
-        </Card>
+        <>
+            <Card key={id} onClick={handleOpen}>
+                <CardImageWrapper>
+                    <CardImage
+                        src={`${process.env.PUBLIC_URL}/pokemons/${id}.png`}
+                        alt={name}
+                    />
+                </CardImageWrapper>
+                <CardInfo>
+                    <CardTitle id="modal-title">{`${name}`}</CardTitle>
+                    <div>{`Weight - ${weight}`}</div>
+                    <div>{`Height - ${height}`}</div>
+                    <h4>Abilities</h4>
+                    <ul>
+                        {abilities?.map((el) => (
+                            <li>{el?.pokemon_v2_ability?.name}</li>
+                        ))}
+                    </ul>
+                </CardInfo>
+            </Card>
+            <Modal
+                open={open}
+                onClose={handleClose}
+                aria-labelledby="modal-title"
+            >
+                <PokemonDetails id={id} />
+            </Modal>
+        </>
     )
 }
 
