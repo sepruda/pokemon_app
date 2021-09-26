@@ -1,7 +1,8 @@
 import styled from '@emotion/styled/macro'
-import { TablePagination, CircularProgress, Box } from '@mui/material'
+import { TablePagination, CircularProgress } from '@mui/material'
 import React, { useState } from 'react'
 import { useQuery } from 'react-query'
+import { useHistory, useLocation, useParams } from 'react-router-dom'
 import { usePokemonListQuery } from '../generated/graphql'
 import PokemonCard from '../PokemonCard/PokemonCard'
 
@@ -21,6 +22,9 @@ const Spinner = styled(CircularProgress)`
 function PokemonList() {
     const [cardsPerPage, setCardsPerPage] = useState(10)
     const [page, setPage] = useState(0)
+    const history = useHistory()
+    const location = useLocation()
+
     // We need to do a HTTP request, since the graphQL API doesn't deliver a total count
     const { data: paginationData } = useQuery('fetchEntries', () =>
         fetch('https://pokeapi.co/api/v2/pokemon/?limit=1').then((res) =>
@@ -34,7 +38,6 @@ function PokemonList() {
         },
         { keepPreviousData: true },
     )
-    console.log(`data`, data)
 
     const handleChangePage = (
         event: React.MouseEvent<HTMLButtonElement> | null,
@@ -48,6 +51,11 @@ function PokemonList() {
     ) => {
         setCardsPerPage(parseInt(event.target.value, 10))
         setPage(0)
+        const limit = new URLSearchParams({ limit: event.target.value })
+        history.replace({
+            pathname: location?.pathname,
+            search: limit.toString(),
+        })
     }
 
     return (
