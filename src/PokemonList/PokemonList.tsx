@@ -58,18 +58,22 @@ function PokemonList() {
         })
     }
 
+    const Pagination = (
+        <TablePagination
+            component="div"
+            count={paginationData?.count || -1}
+            labelRowsPerPage="Cards per page"
+            page={page}
+            onPageChange={handleChangePage}
+            rowsPerPage={cardsPerPage}
+            rowsPerPageOptions={[10, 20, 50]}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+        />
+    )
+
     return (
         <div>
-            <TablePagination
-                component="div"
-                count={paginationData?.count || -1}
-                labelRowsPerPage="Cards per page"
-                page={page}
-                onPageChange={handleChangePage}
-                rowsPerPage={cardsPerPage}
-                rowsPerPageOptions={[10, 20, 50]}
-                onRowsPerPageChange={handleChangeRowsPerPage}
-            />
+            {Pagination}
             {isLoading ? (
                 <Spinner />
             ) : (
@@ -79,6 +83,7 @@ function PokemonList() {
                     ))}
                 </Wrapper>
             )}
+            {Pagination}
         </div>
     )
 }
