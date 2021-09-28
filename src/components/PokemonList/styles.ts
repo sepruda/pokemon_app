@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import { CircularProgress, Select } from '@mui/material'
+import { CircularProgress, Select, TextField } from '@mui/material'
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward'
 
 export const CardWrapper = styled.div`
@@ -19,7 +19,8 @@ export const HeaderWrapper = styled.div`
     align-items: center;
     display: flex;
     justify-content: space-between;
-    padding-bottom: 24px;
+    padding: 24px 0;
+    width: 100%;
 `
 
 export const StyledSelect = styled(Select)`
@@ -32,4 +33,8 @@ export const StyledArrow = styled(ArrowUpwardIcon)`
     &.descending {
         transform: rotate(180deg);
     }
+`
+
+export const SearchField = styled(TextField)`
+    margin: 0 8px;
 `

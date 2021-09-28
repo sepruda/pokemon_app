@@ -23,6 +23,7 @@ import {
     StyledArrow,
     StyledSelect,
     CardWrapper,
+    SearchField,
 } from './styles'
 
 function PokemonList() {
@@ -111,11 +112,8 @@ function PokemonList() {
 
     return (
         <div>
+            <img src={`${process.env.PUBLIC_URL}pokeapi.png`} alt="poke-api" />
             <HeaderWrapper>
-                <img
-                    src={`${process.env.PUBLIC_URL}pokeapi.png`}
-                    alt="poke-api"
-                />
                 <FormControl sx={{ flexDirection: 'row' }}>
                     <InputLabel id="sort-by-label">Sort by</InputLabel>
                     <StyledSelect
@@ -139,7 +137,7 @@ function PokemonList() {
                             className={ascending ? 'ascending' : 'descending'}
                         />
                     </IconButton>
-                    <TextField
+                    <SearchField
                         label="Search name"
                         name="name"
                         onChange={handleSearch}
@@ -163,7 +161,7 @@ function PokemonList() {
                             ),
                         }}
                     />
-                    <TextField
+                    <SearchField
                         label="Search abilities"
                         name="ability"
                         onChange={handleSearch}
