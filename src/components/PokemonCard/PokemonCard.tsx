@@ -1,6 +1,6 @@
 import { Modal } from '@mui/material'
 import { useState } from 'react'
-import { PokemonListQuery } from '../generated/graphql'
+import { PokemonListQuery } from '../../generated/graphql'
 import PokemonDetails from '../PokemonDetails/PokemonDetails'
 import {
     Card,

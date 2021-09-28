@@ -2,7 +2,7 @@ import styled from '@emotion/styled'
 import { CircularProgress, Select } from '@mui/material'
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward'
 
-export const Wrapper = styled.div`
+export const CardWrapper = styled.div`
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
     grid-gap: 1.5rem;

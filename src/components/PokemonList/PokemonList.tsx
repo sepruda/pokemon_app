@@ -5,18 +5,23 @@ import {
     SelectChangeEvent,
     FormControl,
     IconButton,
+    TextField,
+    InputAdornment,
 } from '@mui/material'
 import React, { useState } from 'react'
 import { useQuery } from 'react-query'
 import { useHistory, useLocation, useParams } from 'react-router-dom'
-import { usePokemonListQuery } from '../generated/graphql'
+import SearchIcon from '@mui/icons-material/Search'
+import { usePokemonListQuery } from '../../generated/graphql'
+import useDebounce from '../../hooks/useDebounce'
 import PokemonCard from '../PokemonCard/PokemonCard'
+
 import {
     HeaderWrapper,
     Spinner,
     StyledArrow,
     StyledSelect,
-    Wrapper,
+    CardWrapper,
 } from './styles'
 
 function PokemonList() {
@@ -24,10 +29,15 @@ function PokemonList() {
     const [page, setPage] = useState(0)
     const [sortBy, setSortBy] = useState('id')
     const [ordering, setOrdering] = useState('asc')
+    const [searchQuery, setSearchQuery] = useState('')
     const history = useHistory()
     const location = useLocation()
     const ascending = ordering === 'asc'
+    const debouncedQuery = useDebounce(searchQuery, 500)
 
+    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setSearchQuery(event.target.value)
+    }
     // We need to do a HTTP request, since the graphQL API doesn't deliver a total count
     const { data: paginationData } = useQuery('fetchEntries', () =>
         fetch('https://pokeapi.co/api/v2/pokemon/?limit=1').then((res) =>
@@ -39,6 +49,7 @@ function PokemonList() {
             order_by: { [sortBy]: ordering },
             limit: cardsPerPage,
             offset: page * cardsPerPage,
+            searchQuery: debouncedQuery,
         },
         { keepPreviousData: true },
     )
@@ -69,10 +80,8 @@ function PokemonList() {
     const handleChangeOrder = () => {
         setOrdering((prevState) => (prevState === 'asc' ? 'desc' : 'asc'))
     }
-    console.log(`ordering`, ordering)
 
     // TODO • User should be able to search through the Pokémon list using the name and abilities
-    // • User should be able to sort the result by name, height and weight.
 
     const Pagination = (
         <TablePagination
@@ -90,6 +99,10 @@ function PokemonList() {
     return (
         <div>
             <HeaderWrapper>
+                <img
+                    src={`${process.env.PUBLIC_URL}pokeapi.png`}
+                    alt="poke-api"
+                />
                 <FormControl sx={{ flexDirection: 'row' }}>
                     <InputLabel id="sort-by-label">Sort by</InputLabel>
                     <StyledSelect
@@ -113,18 +126,30 @@ function PokemonList() {
                             className={ascending ? 'ascending' : 'descending'}
                         />
                     </IconButton>
+                    <TextField
+                        label="Search name"
+                        value={searchQuery}
+                        onChange={handleChange}
+                        InputProps={{
+                            startAdornment: (
+                                <InputAdornment position="start">
+                                    <SearchIcon />
+                                </InputAdornment>
+                            ),
+                        }}
+                    />
                 </FormControl>
-
-                {Pagination}
             </HeaderWrapper>
+            {Pagination}
+
             {isLoading ? (
                 <Spinner />
             ) : (
-                <Wrapper>
+                <CardWrapper>
                     {data?.pokemon_v2_pokemon?.map((pokemon) => (
                         <PokemonCard pokemon={pokemon} />
                     ))}
-                </Wrapper>
+                </CardWrapper>
             )}
             {Pagination}
         </div>

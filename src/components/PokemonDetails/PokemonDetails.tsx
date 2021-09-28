@@ -1,5 +1,5 @@
 import { Button } from '@mui/material'
-import { usePokemonDetailsQuery } from '../generated/graphql'
+import { usePokemonDetailsQuery } from '../../generated/graphql'
 import {
     CardImage,
     CardImageWrapper,

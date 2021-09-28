@@ -1,7 +1,7 @@
 import { QueryClient, QueryClientProvider } from 'react-query'
 import { Global, css } from '@emotion/react'
 import { BrowserRouter, Route } from 'react-router-dom'
-import PokemonList from './PokemonList/PokemonList'
+import PokemonList from './components/PokemonList/PokemonList'
 
 const queryClient = new QueryClient()
 

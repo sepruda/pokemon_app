@@ -50618,9 +50618,55 @@ export type Subscription_RootPokemon_V2_Versionname_By_PkArgs = {
     id: Scalars['Int']
 }
 
+export type PokemonDetailsQueryVariables = Exact<{
+    id?: Maybe<Scalars['Int']>
+}>
+
+export type PokemonDetailsQuery = {
+    __typename?: 'query_root'
+    pokemon_v2_pokemon: Array<{
+        __typename?: 'pokemon_v2_pokemon'
+        name: string
+        id: number
+        base_experience?: Maybe<number>
+        height?: Maybe<number>
+        weight?: Maybe<number>
+        pokemon_v2_pokemonabilities: Array<{
+            __typename?: 'pokemon_v2_pokemonability'
+            pokemon_v2_ability?: Maybe<{
+                __typename?: 'pokemon_v2_ability'
+                name: string
+                pokemon_v2_abilityflavortexts: Array<{
+                    __typename?: 'pokemon_v2_abilityflavortext'
+                    flavor_text: string
+                }>
+            }>
+        }>
+        pokemon_v2_pokemonstats: Array<{
+            __typename?: 'pokemon_v2_pokemonstat'
+            base_stat: number
+            pokemon_v2_stat?: Maybe<{
+                __typename?: 'pokemon_v2_stat'
+                name: string
+                pokemon_v2_characteristics: Array<{
+                    __typename?: 'pokemon_v2_characteristic'
+                    pokemon_v2_characteristicdescriptions: Array<{
+                        __typename?: 'pokemon_v2_characteristicdescription'
+                        description: string
+                    }>
+                }>
+            }>
+        }>
+    }>
+}
+
 export type PokemonListQueryVariables = Exact<{
     limit?: Maybe<Scalars['Int']>
     offset?: Maybe<Scalars['Int']>
+    order_by?: Maybe<
+        Array<Pokemon_V2_Pokemon_Order_By> | Pokemon_V2_Pokemon_Order_By
+    >
+    searchQuery?: Maybe<Scalars['String']>
 }>
 
 export type PokemonListQuery = {
@@ -50641,9 +50687,59 @@ export type PokemonListQuery = {
     }>
 }
 
+export const PokemonDetailsDocument = `
+    query PokemonDetails($id: Int) {
+  pokemon_v2_pokemon(where: {id: {_eq: $id}}) {
+    name
+    id
+    base_experience
+    height
+    weight
+    pokemon_v2_pokemonabilities {
+      pokemon_v2_ability {
+        name
+        pokemon_v2_abilityflavortexts(where: {language_id: {_eq: 9}}) {
+          flavor_text
+        }
+      }
+    }
+    pokemon_v2_pokemonstats {
+      pokemon_v2_stat {
+        name
+        pokemon_v2_characteristics {
+          pokemon_v2_characteristicdescriptions(where: {language_id: {_eq: 9}}) {
+            description
+          }
+        }
+      }
+      base_stat
+    }
+  }
+}
+    `
+export const usePokemonDetailsQuery = <
+    TData = PokemonDetailsQuery,
+    TError = unknown,
+>(
+    variables?: PokemonDetailsQueryVariables,
+    options?: UseQueryOptions<PokemonDetailsQuery, TError, TData>,
+) =>
+    useQuery<PokemonDetailsQuery, TError, TData>(
+        ['PokemonDetails', variables],
+        fetcher<PokemonDetailsQuery, PokemonDetailsQueryVariables>(
+            PokemonDetailsDocument,
+            variables,
+        ),
+        options,
+    )
 export const PokemonListDocument = `
-    query PokemonList($limit: Int, $offset: Int) {
-  pokemon_v2_pokemon(limit: $limit, offset: $offset) {
+    query PokemonList($limit: Int, $offset: Int, $order_by: [pokemon_v2_pokemon_order_by!] = {}, $searchQuery: String = "") {
+  pokemon_v2_pokemon(
+    limit: $limit
+    offset: $offset
+    order_by: $order_by
+    where: {name: {_iregex: $searchQuery}}
+  ) {
     weight
     height
     name
