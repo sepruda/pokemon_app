@@ -12,6 +12,7 @@ import React, { useState } from 'react'
 import { useQuery } from 'react-query'
 import { useHistory, useLocation, useParams } from 'react-router-dom'
 import SearchIcon from '@mui/icons-material/Search'
+import ClearIcon from '@mui/icons-material/Clear'
 import { usePokemonListQuery } from '../../generated/graphql'
 import useDebounce from '../../hooks/useDebounce'
 import PokemonCard from '../PokemonCard/PokemonCard'
@@ -29,15 +30,28 @@ function PokemonList() {
     const [page, setPage] = useState(0)
     const [sortBy, setSortBy] = useState('id')
     const [ordering, setOrdering] = useState('asc')
-    const [searchQuery, setSearchQuery] = useState('')
+    const [searchQuery, setSearchQuery] = useState({ name: '', ability: '' })
     const history = useHistory()
     const location = useLocation()
     const ascending = ordering === 'asc'
-    const debouncedQuery = useDebounce(searchQuery, 500)
+    const debouncedNameQuery = useDebounce(searchQuery.name, 500)
+    const debounceAbilityQuery = useDebounce(searchQuery.ability, 500)
 
-    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setSearchQuery(event.target.value)
+    const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setSearchQuery({
+            ...searchQuery,
+            [event.target.name]: event.target.value,
+        })
     }
+
+    const handleClearName = () => {
+        setSearchQuery({ ...searchQuery, name: '' })
+    }
+
+    const handleClearAbility = () => {
+        setSearchQuery({ ...searchQuery, ability: '' })
+    }
+
     // We need to do a HTTP request, since the graphQL API doesn't deliver a total count
     const { data: paginationData } = useQuery('fetchEntries', () =>
         fetch('https://pokeapi.co/api/v2/pokemon/?limit=1').then((res) =>
@@ -49,7 +63,8 @@ function PokemonList() {
             order_by: { [sortBy]: ordering },
             limit: cardsPerPage,
             offset: page * cardsPerPage,
-            searchQuery: debouncedQuery,
+            searchName: debouncedNameQuery,
+            searchAbility: debounceAbilityQuery,
         },
         { keepPreviousData: true },
     )
@@ -80,8 +95,6 @@ function PokemonList() {
     const handleChangeOrder = () => {
         setOrdering((prevState) => (prevState === 'asc' ? 'desc' : 'asc'))
     }
-
-    // TODO • User should be able to search through the Pokémon list using the name and abilities
 
     const Pagination = (
         <TablePagination
@@ -128,30 +141,72 @@ function PokemonList() {
                     </IconButton>
                     <TextField
                         label="Search name"
-                        value={searchQuery}
-                        onChange={handleChange}
+                        name="name"
+                        onChange={handleSearch}
+                        onClick={handleClearAbility}
+                        placeholder="e.g. charizard"
+                        value={searchQuery.name}
                         InputProps={{
                             startAdornment: (
                                 <InputAdornment position="start">
                                     <SearchIcon />
                                 </InputAdornment>
                             ),
+                            endAdornment: (
+                                <IconButton
+                                    aria-label="clear name search"
+                                    onClick={handleClearName}
+                                    edge="end"
+                                >
+                                    <ClearIcon />
+                                </IconButton>
+                            ),
+                        }}
+                    />
+                    <TextField
+                        label="Search abilities"
+                        name="ability"
+                        onChange={handleSearch}
+                        onClick={handleClearName}
+                        placeholder="e.g. overgrow"
+                        value={searchQuery.ability}
+                        InputProps={{
+                            startAdornment: (
+                                <InputAdornment position="start">
+                                    <SearchIcon />
+                                </InputAdornment>
+                            ),
+                            endAdornment: (
+                                <IconButton
+                                    aria-label="clear ability search"
+                                    onClick={handleClearAbility}
+                                    edge="end"
+                                >
+                                    <ClearIcon />
+                                </IconButton>
+                            ),
                         }}
                     />
                 </FormControl>
             </HeaderWrapper>
-            {Pagination}
-
-            {isLoading ? (
-                <Spinner />
+            {!isLoading && !data?.pokemon_v2_pokemon.length ? (
+                <h1 style={{ textAlign: 'center' }}>No results!</h1>
             ) : (
-                <CardWrapper>
-                    {data?.pokemon_v2_pokemon?.map((pokemon) => (
-                        <PokemonCard pokemon={pokemon} />
-                    ))}
-                </CardWrapper>
+                <>
+                    {Pagination}
+
+                    {isLoading ? (
+                        <Spinner />
+                    ) : (
+                        <CardWrapper>
+                            {data?.pokemon_v2_pokemon?.map((pokemon) => (
+                                <PokemonCard pokemon={pokemon} />
+                            ))}
+                        </CardWrapper>
+                    )}
+                    {Pagination}
+                </>
             )}
-            {Pagination}
         </div>
     )
 }
