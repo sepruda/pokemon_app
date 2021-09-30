@@ -1,6 +1,6 @@
 # Issues
 
-##PokeAPI graphQL API beta
+## PokeAPI graphQL API beta
 
 Is in Beta and is a little bit of a mess. It [doesn't support images](https://gitmemory.com/issue/PokeAPI/pokeapi/614/826330809),
 so I had to download all the pokemon images from a repo and put them in the
