@@ -1,4 +1,6 @@
+import styled from '@emotion/styled'
 import { Button } from '@mui/material'
+import { Fragment, KeyboardEvent } from 'react'
 import { usePokemonDetailsQuery } from '../../generated/graphql'
 import {
     CardImage,
@@ -24,7 +26,7 @@ function PokemonDetails({ id, onClose }: Props) {
             {isLoading ? (
                 <Spinner />
             ) : (
-                <>
+                <article>
                     <CardImageWrapper>
                         <CardImage
                             src={`${process.env.PUBLIC_URL}/pokemons/${id}.png`}
@@ -41,7 +43,7 @@ function PokemonDetails({ id, onClose }: Props) {
                             {p?.pokemon_v2_pokemonabilities?.map((el) => {
                                 const ability = el?.pokemon_v2_ability
                                 return (
-                                    <>
+                                    <Fragment key={el.pokemon_v2_ability?.id}>
                                         <li>{ability?.name}</li>
                                         <FlavorText>
                                             {
@@ -50,7 +52,7 @@ function PokemonDetails({ id, onClose }: Props) {
                                                     ?.flavor_text
                                             }
                                         </FlavorText>
-                                    </>
+                                    </Fragment>
                                 )
                             })}
                         </ul>
@@ -58,7 +60,9 @@ function PokemonDetails({ id, onClose }: Props) {
                         <ul>
                             {p?.pokemon_v2_pokemonstats?.map((el) => {
                                 return (
-                                    <li>{`${el.pokemon_v2_stat?.name} - ${el.base_stat}`}</li>
+                                    <li
+                                        key={el.pokemon_v2_stat?.id}
+                                    >{`${el.pokemon_v2_stat?.name} - ${el.base_stat}`}</li>
                                 )
                             })}
                         </ul>
@@ -66,7 +70,7 @@ function PokemonDetails({ id, onClose }: Props) {
                     <CardFooter>
                         <Button onClick={onClose}>Go back</Button>
                     </CardFooter>
-                </>
+                </article>
             )}
         </ModalWrapper>
     )

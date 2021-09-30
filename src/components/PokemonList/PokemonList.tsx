@@ -126,9 +126,6 @@ function PokemonList() {
         />
     )
 
-    // SPLIT into smaller comps
-    // Mobile friendly
-    // Keyboard navigation
     // Query params
 
     return (
@@ -188,7 +185,10 @@ function PokemonList() {
                     ) : (
                         <CardWrapper>
                             {data?.pokemon_v2_pokemon?.map((pokemon) => (
-                                <PokemonCard pokemon={pokemon} />
+                                <PokemonCard
+                                    key={pokemon.id}
+                                    pokemon={pokemon}
+                                />
                             ))}
                         </CardWrapper>
                     )}

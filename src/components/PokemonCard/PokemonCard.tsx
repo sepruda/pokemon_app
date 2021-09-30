@@ -1,5 +1,6 @@
 import { Modal } from '@mui/material'
-import { useState } from 'react'
+import { log } from 'console'
+import { KeyboardEvent, useState } from 'react'
 import { PokemonListQuery } from '../../generated/graphql'
 import PokemonDetails from '../PokemonDetails/PokemonDetails'
 import {
@@ -26,9 +27,18 @@ function PokemonCard({ pokemon }: Props) {
     const handleOpen = () => setOpen(true)
     const handleClose = () => setOpen(false)
 
+    const handleKeyPress = (event: KeyboardEvent<HTMLDivElement>) => {
+        if (event.key === 'Enter') handleOpen()
+    }
+
     return (
         <>
-            <Card key={id} onClick={handleOpen}>
+            <Card
+                key={id}
+                tabIndex={0}
+                onClick={handleOpen}
+                onKeyPress={handleKeyPress}
+            >
                 <CardImageWrapper>
                     <CardImage
                         src={`${process.env.PUBLIC_URL}/pokemons/${id}.png`}
@@ -42,7 +52,9 @@ function PokemonCard({ pokemon }: Props) {
                     <h4>Abilities</h4>
                     <ul>
                         {abilities?.map((el) => (
-                            <li>{el?.pokemon_v2_ability?.name}</li>
+                            <li key={el?.pokemon_v2_ability?.name}>
+                                {el?.pokemon_v2_ability?.name}
+                            </li>
                         ))}
                     </ul>
                 </CardInfo>
