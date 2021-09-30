@@ -134,15 +134,21 @@ function PokemonList() {
     }
 
     const Pagination = (
-        <StyledPagination
-            count={paginationData?.count || -1}
-            labelRowsPerPage="Cards per page"
-            page={page}
-            onPageChange={handleChangePage}
-            rowsPerPage={cardsPerPage}
-            rowsPerPageOptions={[10, 20, 50]}
-            onRowsPerPageChange={handleChangeRowsPerPage}
-        />
+        <table>
+            <tbody>
+                <tr>
+                    <StyledPagination
+                        count={paginationData?.count || -1}
+                        labelRowsPerPage="Cards per page"
+                        page={page}
+                        onPageChange={handleChangePage}
+                        rowsPerPage={cardsPerPage}
+                        rowsPerPageOptions={[10, 20, 50]}
+                        onRowsPerPageChange={handleChangeRowsPerPage}
+                    />
+                </tr>
+            </tbody>
+        </table>
     )
 
     return (

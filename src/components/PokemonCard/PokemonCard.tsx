@@ -1,5 +1,4 @@
 import { Modal } from '@mui/material'
-import { log } from 'console'
 import { KeyboardEvent, useState } from 'react'
 import { PokemonListQuery } from '../../generated/graphql'
 import PokemonDetails from '../PokemonDetails/PokemonDetails'
