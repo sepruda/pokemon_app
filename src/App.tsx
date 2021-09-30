@@ -10,11 +10,15 @@ function App() {
         <QueryClientProvider client={queryClient}>
             <Global
                 styles={css`
+                    html {
+                        overflow-x: hidden;
+                    }
                     body {
                         background-color: hsl(220deg 100% 80%);
-                        padding: 2rem;
+                        margin: 2rem;
                         font-family: 'Poppins', sans-serif;
                         scroll-behavior: smooth;
+                        overflow-x: hidden;
                     }
                 `}
             />

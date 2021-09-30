@@ -1,5 +1,11 @@
 import styled from '@emotion/styled'
-import { CircularProgress, Select, TextField } from '@mui/material'
+import {
+    CircularProgress,
+    FormControl,
+    Select,
+    TablePagination,
+    TextField,
+} from '@mui/material'
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward'
 
 export const CardWrapper = styled.div`
@@ -15,10 +21,12 @@ export const Spinner = styled(CircularProgress)`
     margin: auto;
 `
 
-export const HeaderWrapper = styled.div`
+export const Header = styled(FormControl)`
+    justify-content: baseline;
+    gap: 24px;
     align-items: center;
-    display: flex;
-    justify-content: space-between;
+    flex-direction: row;
+    flex-wrap: wrap;
     padding: 24px 0;
     width: 100%;
 `
@@ -35,6 +43,12 @@ export const StyledArrow = styled(ArrowUpwardIcon)`
     }
 `
 
-export const SearchField = styled(TextField)`
-    margin: 0 8px;
+export const SearchField = styled(TextField)``
+
+export const StyledPagination = styled(TablePagination)`
+    padding: 0;
+
+    & .MuiToolbar-root {
+        flex-wrap: wrap;
+    }
 `

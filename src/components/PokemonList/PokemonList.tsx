@@ -1,16 +1,14 @@
 import {
-    TablePagination,
     InputLabel,
     MenuItem,
     SelectChangeEvent,
     FormControl,
     IconButton,
-    TextField,
     InputAdornment,
 } from '@mui/material'
 import React, { useState } from 'react'
 import { useQuery } from 'react-query'
-import { useHistory, useLocation, useParams } from 'react-router-dom'
+import { useHistory, useLocation } from 'react-router-dom'
 import SearchIcon from '@mui/icons-material/Search'
 import ClearIcon from '@mui/icons-material/Clear'
 import { usePokemonListQuery } from '../../generated/graphql'
@@ -18,12 +16,13 @@ import useDebounce from '../../hooks/useDebounce'
 import PokemonCard from '../PokemonCard/PokemonCard'
 
 import {
-    HeaderWrapper,
+    Header,
     Spinner,
     StyledArrow,
     StyledSelect,
     CardWrapper,
     SearchField,
+    StyledPagination,
 } from './styles'
 
 function PokemonList() {
@@ -97,9 +96,25 @@ function PokemonList() {
         setOrdering((prevState) => (prevState === 'asc' ? 'desc' : 'asc'))
     }
 
+    const searchInputProps = {
+        startAdornment: (
+            <InputAdornment position="start">
+                <SearchIcon />
+            </InputAdornment>
+        ),
+        endAdornment: (
+            <IconButton
+                aria-label="clear name search"
+                onClick={handleClearName}
+                edge="end"
+            >
+                <ClearIcon />
+            </IconButton>
+        ),
+    }
+
     const Pagination = (
-        <TablePagination
-            component="div"
+        <StyledPagination
             count={paginationData?.count || -1}
             labelRowsPerPage="Cards per page"
             page={page}
@@ -107,13 +122,19 @@ function PokemonList() {
             rowsPerPage={cardsPerPage}
             rowsPerPageOptions={[10, 20, 50]}
             onRowsPerPageChange={handleChangeRowsPerPage}
+            sx={{ flexWrap: 'wrap', overflowX: 'hidden' }}
         />
     )
+
+    // SPLIT into smaller comps
+    // Mobile friendly
+    // Keyboard navigation
+    // Query params
 
     return (
         <div>
             <img src={`${process.env.PUBLIC_URL}pokeapi.png`} alt="poke-api" />
-            <HeaderWrapper>
+            <Header>
                 <FormControl sx={{ flexDirection: 'row' }}>
                     <InputLabel id="sort-by-label">Sort by</InputLabel>
                     <StyledSelect
@@ -122,7 +143,6 @@ function PokemonList() {
                         value={sortBy}
                         label="sortBy"
                         onChange={handleChangeSorting}
-                        size="small"
                     >
                         <MenuItem value="id">ID</MenuItem>
                         <MenuItem value="name">Name</MenuItem>
@@ -137,56 +157,26 @@ function PokemonList() {
                             className={ascending ? 'ascending' : 'descending'}
                         />
                     </IconButton>
-                    <SearchField
-                        label="Search name"
-                        name="name"
-                        onChange={handleSearch}
-                        onClick={handleClearAbility}
-                        placeholder="e.g. charizard"
-                        value={searchQuery.name}
-                        InputProps={{
-                            startAdornment: (
-                                <InputAdornment position="start">
-                                    <SearchIcon />
-                                </InputAdornment>
-                            ),
-                            endAdornment: (
-                                <IconButton
-                                    aria-label="clear name search"
-                                    onClick={handleClearName}
-                                    edge="end"
-                                >
-                                    <ClearIcon />
-                                </IconButton>
-                            ),
-                        }}
-                    />
-                    <SearchField
-                        label="Search abilities"
-                        name="ability"
-                        onChange={handleSearch}
-                        onClick={handleClearName}
-                        placeholder="e.g. overgrow"
-                        value={searchQuery.ability}
-                        InputProps={{
-                            startAdornment: (
-                                <InputAdornment position="start">
-                                    <SearchIcon />
-                                </InputAdornment>
-                            ),
-                            endAdornment: (
-                                <IconButton
-                                    aria-label="clear ability search"
-                                    onClick={handleClearAbility}
-                                    edge="end"
-                                >
-                                    <ClearIcon />
-                                </IconButton>
-                            ),
-                        }}
-                    />
                 </FormControl>
-            </HeaderWrapper>
+                <SearchField
+                    label="Search name"
+                    name="name"
+                    onChange={handleSearch}
+                    onClick={handleClearAbility}
+                    placeholder="e.g. charizard"
+                    value={searchQuery.name}
+                    InputProps={searchInputProps}
+                />
+                <SearchField
+                    label="Search abilities"
+                    name="ability"
+                    onChange={handleSearch}
+                    onClick={handleClearName}
+                    placeholder="e.g. overgrow"
+                    value={searchQuery.ability}
+                    InputProps={searchInputProps}
+                />
+            </Header>
             {!isLoading && !data?.pokemon_v2_pokemon.length ? (
                 <h1 style={{ textAlign: 'center' }}>No results!</h1>
             ) : (
