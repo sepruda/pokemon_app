@@ -6,7 +6,7 @@ import {
     IconButton,
     InputAdornment,
 } from '@mui/material'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useQuery } from 'react-query'
 import { useHistory, useLocation } from 'react-router-dom'
 import SearchIcon from '@mui/icons-material/Search'
@@ -28,29 +28,18 @@ import {
 function PokemonList() {
     const [cardsPerPage, setCardsPerPage] = useState(10)
     const [page, setPage] = useState(0)
-    const [sortBy, setSortBy] = useState('id')
-    const [ordering, setOrdering] = useState('asc')
-    const [searchQuery, setSearchQuery] = useState({ name: '', ability: '' })
+    const query = new URLSearchParams(useLocation().search)
+
+    const [sortBy, setSortBy] = useState(query?.get('sort') || 'id')
+    const [ordering, setOrdering] = useState(query?.get('direction') || 'asc')
+    const [searchQuery, setSearchQuery] = useState({
+        name: query?.get('name') || '',
+        ability: query?.get('ability') || '',
+    })
     const history = useHistory()
-    const location = useLocation()
     const ascending = ordering === 'asc'
     const debouncedNameQuery = useDebounce(searchQuery.name, 500)
     const debounceAbilityQuery = useDebounce(searchQuery.ability, 500)
-
-    const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setSearchQuery({
-            ...searchQuery,
-            [event.target.name]: event.target.value,
-        })
-    }
-
-    const handleClearName = () => {
-        setSearchQuery({ ...searchQuery, name: '' })
-    }
-
-    const handleClearAbility = () => {
-        setSearchQuery({ ...searchQuery, ability: '' })
-    }
 
     // We need to do a HTTP request, since the graphQL API doesn't deliver a total count
     const { data: paginationData } = useQuery('fetchEntries', () =>
@@ -69,6 +58,42 @@ function PokemonList() {
         { keepPreviousData: true },
     )
 
+    useEffect(() => {
+        const params = new URLSearchParams()
+        if (searchQuery.name) {
+            params.append('name', searchQuery.name)
+        } else {
+            params.delete('name')
+        }
+
+        if (searchQuery.ability) {
+            params.append('ability', searchQuery.ability)
+        } else {
+            params.delete('ability')
+        }
+
+        if (sortBy !== 'id') {
+            params.append('sort', sortBy)
+            params.append('direction', ordering)
+        } else {
+            params.delete('sort')
+            params.delete('direction')
+        }
+
+        history.push({ search: params.toString() })
+    }, [searchQuery, history, sortBy, ordering])
+
+    const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setSearchQuery({
+            ...searchQuery,
+            [event.target.name]: event.target.value,
+        })
+    }
+
+    const handleClearSearch = () => {
+        setSearchQuery({ name: '', ability: '' })
+    }
+
     const handleChangePage = (
         event: React.MouseEvent<HTMLButtonElement> | null,
         newPage: number,
@@ -81,11 +106,6 @@ function PokemonList() {
     ) => {
         setCardsPerPage(parseInt(event.target.value, 10))
         setPage(0)
-        const limit = new URLSearchParams({ limit: event.target.value })
-        history.replace({
-            pathname: location?.pathname,
-            search: limit.toString(),
-        })
     }
 
     const handleChangeSorting = (event: SelectChangeEvent<unknown>) => {
@@ -105,7 +125,7 @@ function PokemonList() {
         endAdornment: (
             <IconButton
                 aria-label="clear name search"
-                onClick={handleClearName}
+                onClick={handleClearSearch}
                 edge="end"
             >
                 <ClearIcon />
@@ -122,11 +142,8 @@ function PokemonList() {
             rowsPerPage={cardsPerPage}
             rowsPerPageOptions={[10, 20, 50]}
             onRowsPerPageChange={handleChangeRowsPerPage}
-            sx={{ flexWrap: 'wrap', overflowX: 'hidden' }}
         />
     )
-
-    // Query params
 
     return (
         <div>
@@ -159,7 +176,6 @@ function PokemonList() {
                     label="Search name"
                     name="name"
                     onChange={handleSearch}
-                    onClick={handleClearAbility}
                     placeholder="e.g. charizard"
                     value={searchQuery.name}
                     InputProps={searchInputProps}
@@ -168,7 +184,6 @@ function PokemonList() {
                     label="Search abilities"
                     name="ability"
                     onChange={handleSearch}
-                    onClick={handleClearName}
                     placeholder="e.g. overgrow"
                     value={searchQuery.ability}
                     InputProps={searchInputProps}

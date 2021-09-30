@@ -47,6 +47,7 @@ export const SearchField = styled(TextField)``
 
 export const StyledPagination = styled(TablePagination)`
     padding: 0;
+    overflow-x: hidden;
 
     & .MuiToolbar-root {
         flex-wrap: wrap;

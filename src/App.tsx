@@ -23,7 +23,7 @@ function App() {
                 `}
             />
             <BrowserRouter>
-                <Route path="/">
+                <Route>
                     <PokemonList />
                 </Route>
             </BrowserRouter>
