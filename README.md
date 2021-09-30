@@ -10,7 +10,7 @@ public folder. Obviously not ideal, but solves the issue.
 Also it doesn't have a field for a total count of pokemons, so I had to get that
 from a HTTP request for use in pagination.
 
-Also it doesn't seem to support searching multiple fields, which is why I had to
+Finally it doesn't seem to support searching multiple fields, which is why I had to
 split up the name and ability search functionality.
 
 # Architechture
