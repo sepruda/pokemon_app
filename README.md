@@ -1,9 +1,12 @@
 # Issues
 
-PokeAPI graphQL API
-[doesn't support images](https://gitmemory.com/issue/PokeAPI/pokeapi/614/826330809),
+## PokeAPI graphQL API beta
+
+Is in Beta and is a little bit of a mess. It [doesn't support images](https://gitmemory.com/issue/PokeAPI/pokeapi/614/826330809),
 so I had to download all the pokemon images from a repo and put them in the
 public folder. Obviously not ideal, but solves the issue.
+
+Also it doesn't have a field for a total count of pokemons, so I had to get that from a HTTP request for use in pagination.
 
 # Getting Started with Create React App
 
